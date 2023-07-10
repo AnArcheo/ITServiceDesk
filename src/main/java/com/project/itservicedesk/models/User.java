@@ -47,7 +47,7 @@ public class User {
 
     @Column(name = "gender", nullable = false, length = 10)
     @Enumerated(value = EnumType.STRING)
-    private String gender;
+    private Gender gender;
 
     @Column(name = "active", nullable = false)
     private Boolean isActive;
