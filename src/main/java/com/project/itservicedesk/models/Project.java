@@ -24,6 +24,10 @@ public class Project {
     @Column(name = "project_name", nullable = false, unique = true)
     private String projectName;
 
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id", insertable=false, updatable=false)
+    private Company company;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "projects")
     private Set<User> users = new HashSet<>();
 
