@@ -1,12 +1,11 @@
 package com.project.itservicedesk.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Type;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,8 +48,13 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "active", nullable = false)
-    private Boolean isActive;
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled;
+
+    @Lob
+    @Column(name = "profile_photo", nullable = true)
+    private Byte[] profilePhoto;
+
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
