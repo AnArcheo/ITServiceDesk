@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.bugs</OriginalElement>
+  <nodes>
+    <node x="6.625000000000085" y="310.5">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users</node>
+    <node x="-15.374999999999943" y="-205.2589285714286">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.companies</node>
+    <node x="-232.51339285714278" y="616.7142857142858">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users_roles</node>
+    <node x="-15.374999999999943" y="-50.375">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.projects</node>
+    <node x="-491.34821428571433" y="616.2142857142858">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.roles</node>
+    <node x="-421.2589285714287" y="203.6428571428573">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.tasks</node>
+    <node x="15.125000000000114" y="127.50892857142861">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users_projects</node>
+    <node x="440.0178571428571" y="195.48214285714272">ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.bugs</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users_roles" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users" relationship="REFERENCES">
+      <point x="71.0" y="0.0" />
+      <point x="-46.11830357142851" y="655.7142857142858" />
+      <point x="-46.11830357142851" y="442.0" />
+      <point x="-94.0" y="0.0" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users_roles" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.roles" relationship="REFERENCES">
+      <point x="-71.0" y="0.0" />
+      <point x="72.5" y="0.0" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.projects" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.companies" relationship="REFERENCES">
+      <point x="0.0" y="-51.0" />
+      <point x="89.62500000000006" y="5.424107142857139" />
+      <point x="0.0" y="39.5" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users_projects" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users" relationship="REFERENCES">
+      <point x="-31.75" y="39.0" />
+      <point x="-31.74999999999997" y="-131.5" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.tasks" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users" relationship="REFERENCES">
+      <point x="108.5" y="0.0" />
+      <point x="-51.36160714285711" y="335.14285714285734" />
+      <point x="-51.36160714285711" y="427.0" />
+      <point x="-94.0" y="-15.0" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.bugs" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.projects" relationship="REFERENCES">
+      <point x="0.0" y="-143.0" />
+      <point x="548.5178571428571" y="0.625" />
+      <point x="105.0" y="0.0" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users_projects" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.projects" relationship="REFERENCES">
+      <point x="15.0" y="-39.0" />
+      <point x="115.62500000000011" y="82.05357142857144" />
+      <point x="104.62500000000006" y="82.05357142857144" />
+      <point x="15.0" y="51.0" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.bugs" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.users" relationship="REFERENCES">
+      <point x="-108.5" y="-126.89285714285711" />
+      <point x="414.1607142857143" y="211.5892857142856" />
+      <point x="414.1607142857143" y="442.0" />
+      <point x="94.0" y="0.0" />
+    </edge>
+    <edge source="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.tasks" target="ca0ec09d-59ad-41fe-b873-f04b6a459c97.TABLE:itservicedesk.public.projects" relationship="REFERENCES">
+      <point x="108.5" y="-124.0" />
+      <point x="-65.57142857142864" y="211.14285714285734" />
+      <point x="-65.57142857142864" y="20.80357142857156" />
+      <point x="-105.0" y="20.17857142857156" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.5989304812834225" showDependencies="false" x="254.1584821428571" y="396.4257812500001" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+
