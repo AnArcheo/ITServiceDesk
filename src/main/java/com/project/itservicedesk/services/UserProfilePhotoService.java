@@ -2,9 +2,9 @@ package com.project.itservicedesk.services;
 
 import com.project.itservicedesk.models.User;
 import com.project.itservicedesk.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
