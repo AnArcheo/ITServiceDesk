@@ -27,11 +27,11 @@ public class User {
     @NotBlank
     @NotEmpty
     @NotNull
-    @Column(name = "username", length = 30)
+    @Column(name = "username", unique = true, length = 30)
     @Formula(value = "SUBSTRING(email, 0, CHARINDEX('@', email))")
     private String username;
 
-    @Column(name = "password", nullable = false, length = 120)
+    @Column(name = "password", nullable = false, length = 256)
     private String password;
 
     @Column(name = "email", nullable = false, unique = true, length = 45)
@@ -48,8 +48,8 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
 
     @Lob
     @Column(name = "profile_photo", nullable = true)
