@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -66,6 +67,7 @@ public class Task {
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
-    @Lob
-    private Byte[] attachment;
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attachments")
+    @Column(name="task_attachments")
+    private Set<TaskAttachment> taskAttachments;
 }

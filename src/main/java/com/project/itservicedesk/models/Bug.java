@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -71,6 +72,8 @@ public class Bug {
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
 
-    @Lob
-    private Byte[] attachment;
+
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attachments")
+    @Column(name="bug_attachments")
+    private Set<BugAttachment> bugAttachments;
 }

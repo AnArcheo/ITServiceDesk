@@ -52,8 +52,8 @@ public class User {
     private Boolean isActive;
 
     @Lob
-    @Column(name = "profile_photo", nullable = true)
-    private Byte[] profilePhoto;
+    @Column(name = "profile_photo")
+    private byte[] profilePhoto;
 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -70,15 +70,15 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private Set<Project> projects = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assignedTo")
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "assignedTo")
     private Set<Task> assignedTasks = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "createdBy")
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "createdBy")
     private Set<Task> createdTasks = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "assignedTo")
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "assignedTo")
     private Set<Bug> assignedBugs = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "reportedBy")
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "reportedBy")
     private Set<Bug> reportedBugs = new HashSet<>();
 }
