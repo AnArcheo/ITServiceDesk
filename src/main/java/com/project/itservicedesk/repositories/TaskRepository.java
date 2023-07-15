@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Long, Task> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query(value = "SELECT * FROM tasks WHERE CONCAT(title, status, priority) ILIKE %?1%", nativeQuery = true)
     Page<Task> searchRepository(String keyword, Pageable pageable);
