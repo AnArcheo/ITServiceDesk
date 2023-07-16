@@ -1,0 +1,222 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task List</title>
+
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css} "/>
+  <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/6.2.1/css/font-awesome.min.css}"/>
+  <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v6.2.1/css/all.css">
+
+  <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"-->
+  <!--          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="-->
+  <!--          crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+  <style>
+    body {
+      padding: 0px;
+      margin: 0px;
+    }
+  </style>
+</head>
+<body style="margin: 0px; padding: 0px">
+
+
+<div layout:fragment="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 mt-5 mb-md-7">
+        <br>
+        <!--            message attribute-->
+        <div th:if="${message != null}"
+             class="alert alert-warning alert-dismissible fade show text-center message"
+             role="alert">
+          [[${message}]]
+          <a class="btn" href="/users" type="button">
+            <i class="fa fa-close"></i></a>
+        </div>
+        <!--searching and page size forms-->
+        <div class="my-3">
+          <div class="row d-lg-flex">
+            <div class="col-md-9 mt-2" style="padding:0px">
+              <!--                            search by keyword form-->
+              <form th:action="@{/users}" id="searchKeyword">
+                <div class="input-group">
+                  <div class="col-md-6 search">
+                    <input id="keyword" type="search" name="keyword" th:value="${keyword}" required
+                           class="form-control"
+                           placeholder="Enter keyword">
+                  </div>
+                  <div class="row-col-md-3" style="padding:0px">
+                    <button type="submit" class="btn btn-secondary"><i class="fa fa-search"></i>
+                      Search
+                    </button>
+                  </div>
+                  <br>
+                  <!--                                    clear search button-->
+                  <div class="d-grid gap-2 d-md-block">
+                    <a class="btn btn-info" href="/users" type="button">
+                      <i class="fa fa-refresh"></i>Clear Search</a>
+                  </div>
+                </div>
+              </form>
+
+
+            </div>
+            <div class="col-md-3 mt-2" style="padding:0px">
+              <!--                            items per page form-->
+              <form th:action="@{/users}" id="itemsPerPage">
+                <div class="input-group">
+                  <label class="input-group-text" for="pageSize">Items per page:</label>
+                  <select form="itemsPerPage" name="pageSize" th:value="${pageSize}"
+                          onchange="changePage()"
+                          class="size-select" id="pageSize">
+                    <option th:each="s : ${pageSizesList}" th:text="${s}"
+                            th:value="${s}"
+                            th:selected="${s} == ${pageSize}"></option>
+                  </select>
+                  <div class="col-md-4" style="padding:0px">
+                    <button type="submit" class="btn btn-secondary"><i class="fa fa-table"></i>
+                      Show Items
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <br>
+
+
+      <!--            Create new task Button-->
+      <div class="d-grid gap-2 d-md-block" style="padding-top: 1%; padding-bottom: 1%">
+        <a class="btn btn-outline-success" href="/users/addUser" type="button"><i
+                class="fa-solid fa-plus-circle"></i>Add User</a>
+      </div>
+      <br>
+
+      <!--table-->
+      <!--            check for sorting-->
+      <div th:if="${usersList.size() > 0}">
+        <table id="usersList" class="table table-bordered table-striped">
+          <thead class="table-dark">
+          <tr>
+            <th style="text-align: center;" th:replace="~{fragments/sorting :: sorting('id', 'ID')}"></th>
+            <th style="text-align: center;"
+                th:replace="~{fragments/sorting :: sorting('firstname', 'FIRST NAME')}"></th>
+            <!--                        <th style="text-align: center;"-->
+            <!--                            th:replace="~{fragments/sorting :: sorting('description', 'DESCRIPTION')}"></th>-->
+            <th style="text-align: center"
+                th:replace="~{fragments/sorting :: sorting('lastname', 'LAST NAME')}"></th>
+            <th style="text-align: center"
+                th:replace="~{fragments/sorting :: sorting('email', 'EMAIL')}"></th>
+            <th style="text-align: center"
+                th:replace="~{fragments/sorting :: sorting('username', 'USERNAME')}"></th>
+            <th style="text-align: center"
+                th:replace="~{fragments/sorting :: sorting('userRole', 'ROLES')}"></th>
+            <th style="text-align: center"
+                th:replace="~{fragments/sorting :: sorting('projects', 'PROJECTS')}"></th>
+
+
+            <th style="text-align: center; width: 10%">ACTIONS</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="user : ${usersList}">
+            <td style="text-align: center;width: 5%" th:text="${user.id}">ID</td>
+            <td style="text-align: center; width: 11%" th:text="${user.firstname}">FIRST NAME</td>
+            <td style="text-align: center; width: 11%" th:text="${user.lastname}">LAST NAME</td>
+            <td style="text-align: center; width: 11%" th:text="${user.email}">EMAIL</td>
+            <td style="text-align: center; width: 11%" th:text="${user.username}">USERNAME</td>
+            <!--                        <td style="text-align: center;width: 20%; word-break: break-all;" th:text="${task.description}">DESCRIPTION</td>-->
+            <td style="text-align: center; width: 8%" th:text="${user.userRoles}">ROLES</td>
+            <td style="text-align: center;width: 5%" th:text="${user.projects}">PROJECTS</td>
+
+            <div class="btn-group-lg" style="width: 10%">
+              <td style="text-align: center; width: 10%">
+                <a th:href="@{/users/edit/{id}(id=${user.id})}"
+                   class="btn btn-warning" type="button" style="margin:5px;"> <i
+                        class="fa-solid fa-pen"></i>
+                </a>
+
+                <a th:href="@{/users/delete/{id}(id=${user.id})}"
+                   class="btn btn-danger" type="button" style="margin:5px;"> <i
+                        class="fa-solid fa-trash-can"></i>
+                </a>
+              </td>
+            </div>
+          </tr>
+          </tbody>
+        </table>
+
+        <!--                    if no users found-->
+        <div>
+          <div class="" th:unless="${usersList.size() > 0}">
+            <span>No Users found!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--            paging-->
+    <nav aria-label="Pagination" th:if="${totalPages > 1}">
+      <ul class="pagination justify-content-center">
+        <li class="page-item font-weight-bold" style="font-style: italic;">Total Records: [[${totalItems}]]</li>&nbsp;&nbsp;
+
+        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+          <a th:replace="~{fragments/paging :: paging(1, '<<', 'First Page')}"></a>
+        </li>
+        <li class="page-item font-weight-bold">
+          <a th:insert="${currentPage > 2} ? ~{fragments/paging :: paging(${currentPage - 1}, 'Prev', 'Previous Page')} : ~{fragments/paging :: paging(1, 'Prev', 'Previous Page') }"></a>
+        </li>
+        <li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+          <a class="page-link" href="#">...</a>
+        </li>
+        <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+            th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1 , currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+          <a th:replace="~{fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})}"></a>
+        </li>
+        <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+          <a class="page-link" href="#">...</a>
+        </li>
+        <li class="page-item font-weight-bold">
+          <!--                            insert proper fragment based on the condition-->
+          <a th:insert=" ${currentPage < totalPages} ? ~{fragments/paging :: paging(${currentPage + 1},'Next', 'Next Page')} : ~{fragments/paging :: paging(${totalPages},'Next', 'Next Page')}"></a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+          <a th:replace="~{fragments/paging :: paging(${totalPages}, '>>', 'Last Page')}"></a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+</div>
+
+
+<script th:src="@{/webjars/jquery/3.6.3/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    // ...
+
+    $("#btnClear").on("click", function (e) {
+      e.preventDefault();
+      $("#keyword").text("");
+      window.location = "[[@{/users}]]";
+    });
+  });
+
+  function changePage() {
+    $("#itemsPerPage").submit();
+  }
+
+</script>
+</body>
+</html>
