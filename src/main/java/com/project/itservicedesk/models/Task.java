@@ -67,7 +67,7 @@ public class Task {
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
 
-    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attachments")
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
     @Column(name="task_attachments")
     private Set<TaskAttachment> taskAttachments;
 }
