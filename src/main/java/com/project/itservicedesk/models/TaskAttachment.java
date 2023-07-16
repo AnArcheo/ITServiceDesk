@@ -22,6 +22,10 @@ public class TaskAttachment {
 
     private String type;
 
+    @ManyToOne
+    @JoinColumn(name = "task_id", referencedColumnName = "id")
+    private Task task;
+
     @Lob
     private byte[] attachments;
 }
