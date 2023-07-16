@@ -73,7 +73,7 @@ public class Bug {
     private LocalDateTime modifiedDate;
 
 
-    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "attachments")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "bug")
     @Column(name="bug_attachments")
     private Set<BugAttachment> bugAttachments;
 }
