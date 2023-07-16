@@ -11,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@ToString(of = "projectName")
+@ToString(of = {"projectName", "company"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -25,15 +25,15 @@ public class Project {
     private String projectName;
 
     @ManyToOne
-    @JoinColumn(name = "company_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "projects")
     private Set<User> users = new HashSet<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
     private List<Task> projectTasks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
     private List<Bug> projectBugs = new ArrayList<>();
 }
