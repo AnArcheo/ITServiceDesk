@@ -19,6 +19,10 @@ public class BugAttachment {
 
     private String type;
 
+    @ManyToOne
+    @JoinColumn(name = "bug_id", referencedColumnName = "id")
+    private Bug bug;
+
     @Lob
     private byte[] attachments;
 }
