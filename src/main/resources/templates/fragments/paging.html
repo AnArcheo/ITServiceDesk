@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+<div th:fragment="paging(pageNum, label, tooltip)">
+
+
+<a  class="page-link"
+   th:href="@{'/?' + ${keyword !=null && keyword !=''? 'keyword=' + keyword + '&' : ''}
+                           + 'page=' + ${pageNum} + '&pageSize=' + ${pageSize}
+                           + ${sortField!=null ? '&sort=' + sortField + ',' + sortDirection : ''}}"
+   th:title="${tooltip}" rel="tooltip">
+  [[${label}]]
+</a>
+</div>
+</body>
+</html>
