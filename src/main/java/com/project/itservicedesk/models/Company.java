@@ -23,6 +23,6 @@ public class Company {
     @Column(name = "Company_name", nullable = false, unique = true)
     private String companyName;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
     private Set<Project> projects = new HashSet<>();
 }
