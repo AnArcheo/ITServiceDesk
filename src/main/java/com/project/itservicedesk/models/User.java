@@ -53,7 +53,7 @@ public class User {
 
     @Lob
     @Column(name = "profile_photo")
-    private byte[] profilePhoto;
+    private Byte[] profilePhoto;
 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -81,4 +81,8 @@ public class User {
 
     @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "reportedBy")
     private Set<Bug> reportedBugs = new HashSet<>();
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 }
