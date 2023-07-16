@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Task Form</title>
+
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css} "/>
+  <link th:rel="stylesheet" th:href="@{assets/bootstrap-datepicker/css/bootstrap-datepicker.css}"/>
+  <link th:rel="stylesheet" th:href="@{/webjars/font-awesome/6.2.1/css/font-awesome.min.css}"/>
+  <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v6.2.1/css/all.css">
+
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"-->
+<!--        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="-->
+<!--        crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+
+
+
+</head>
+<body>
+
+<div layout:fragment="content">
+<div class="container-lg">
+<!--  mt -  margin top-->
+  <div class="row mt-5">
+<!--    back button-->
+    <div class="d-grid gap-2 d-md-block">
+      <a class="btn btn-outline-warning" href="/tasks" type="button">
+        <i class="fa fa-arrow-left"></i>Back</a>
+    </div>
+    <br>
+    <br>
+<!--    Form-->
+    <div class="col-6 mt-5 mx-md-3">
+      <h2>Create A New Task</h2>
+      <br>
+      <form action="#" th:action="@{/tasks/submitNewTask}" th:object="${task}" method="post">
+        <div class="form-group">
+          <label for="title"> Title</label>
+          <input class="form-control" type="text" th:field="*{title}" id="title" placeholder="Title">
+            <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+        </div>
+          <br>
+<!--        <div class="form-group">-->
+<!--          <label for="description"> Description</label>-->
+<!--          <textarea class="form-control" type="text" rows="2" id="description" placeholder="Description"-->
+<!--                    th:field="*{description}" autocomplete="off"></textarea>-->
+<!--            <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>-->
+<!--        </div>-->
+<!--        <br>-->
+        <div class="form-group">
+          <label for="status"> Status</label>
+          <select class="form-control" th:field="*{status}">
+<!--            th:value="${statusValue.name()}"-->
+            <option th:each="statusValue : ${T(com.project.tasklistapp.models.TaskStatus).values()}"
+                    th:value="${statusValue}"
+                    th:text="${statusValue.getDisplayLabel()}">Status</option>
+          </select>
+        </div>
+        <br>
+        <div class="form-group">
+          <label for="priority"> Priority</label>
+          <select class="form-control" th:field="*{priority}">
+            <option th:each="priorityValue : ${T(com.project.tasklistapp.models.Priority).values()}"
+                    th:value="${priorityValue}"
+                    th:text="${priorityValue.getDisplayLabel()}">Priority</option>
+          </select>
+        </div>
+        <br>
+        <div class="form-group">
+          <label for="dueDate">Due Date</label>
+          <div>
+            <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}" />
+              <div style="color:red" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
+          </div>
+        </div>
+        <br>
+          <div class="form-group">
+              <label for="creator">CREATOR</label>
+              <div>
+                  <input type="text" class="form-control" id="creator" th:field="*{creator}" />
+                  <div style="color:red" th:if="${#fields.hasErrors('creator')}" th:errors="*{creator}"></div>
+              </div>
+          </div>
+          <br>
+          <div class="form-group">
+              <label for="assigneeName">ASSIGNEE</label>
+              <div>
+                  <input type="text" class="form-control" id="assigneeName" th:field="*{assigneeName}" />
+                  <div style="color:red" th:if="${#fields.hasErrors('assigneeName')}" th:errors="*{assigneeName}"></div>
+              </div>
+          </div>
+          <br>
+          <div class="form-group">
+              <label for="projectName">PROJECT</label>
+              <div>
+                  <input type="text" class="form-control" id="projectName" th:field="*{projectName}" />
+                  <div style="color:red" th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}"></div>
+              </div>
+          </div>
+          <br>
+
+
+        <button class="btn btn-primary" type="submit">Submit</button>
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+<script th:src="@{/webjars/jquery/3.6.3/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+
+
+</body>
+</html>
