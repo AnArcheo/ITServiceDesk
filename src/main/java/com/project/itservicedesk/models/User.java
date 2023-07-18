@@ -15,6 +15,7 @@ import java.util.Set;
 @ToString(of = "email")
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Entity
 @Table(name="users")
 public class User {
@@ -26,9 +27,8 @@ public class User {
 
     @NotBlank
     @NotEmpty
-    @NotNull
     @Column(name = "username", unique = true, length = 30)
-    @Formula(value = "SUBSTRING(email, 0, CHARINDEX('@', email))")
+//    @Formula(value = "SUBSTRING(email, 0, CHARINDEX('@', email))")
     private String username;
 
     @Column(name = "password", nullable = false, length = 256)
@@ -80,7 +80,23 @@ public class User {
     private Set<Bug> assignedBugs = new HashSet<>();
 
     @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "reportedBy")
+    @Column(name="reported_bugs")
     private Set<Bug> reportedBugs = new HashSet<>();
+
+//    public User(String username, String password, String email, String firstname, String lastname, Gender gender) {
+//        this.username = username;
+//        this.password = password;
+//        this.email = email;
+//        this.firstname = firstname;
+//        this.lastname = lastname;
+//        this.gender = gender;
+//        this.roles = new HashSet<>();
+//        this.projects = new HashSet<>();
+//        this.assignedTasks = new HashSet<>();
+//        this.createdTasks = new HashSet<>();
+//        this.assignedBugs = new HashSet<>();
+//        this.reportedBugs  = new HashSet<>();
+//    }
 
     public void addRole(Role role) {
         this.roles.add(role);
