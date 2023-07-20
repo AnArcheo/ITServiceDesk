@@ -7,8 +7,6 @@ import com.project.itservicedesk.models.Role;
 import com.project.itservicedesk.models.User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserDTOMapper {
 
