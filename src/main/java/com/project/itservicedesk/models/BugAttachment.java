@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name="bug_attachments")
 public class BugAttachment {
@@ -15,14 +16,12 @@ public class BugAttachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     private String name;
-
+    @NonNull
     private String type;
 
-    @ManyToOne
-    @JoinColumn(name = "bug_id", referencedColumnName = "id")
-    private Bug bug;
-
+    @NonNull
     @Lob
     private byte[] attachments;
 }
