@@ -40,7 +40,7 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private PriorityStatus priority;
 
-    @Column(name="created_date", nullable = false)
+    @Column(name="created_date", nullable = false, updatable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @CreationTimestamp
     private LocalDateTime createdDate;
@@ -57,17 +57,29 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
-    private User createdBy;
+    private User creator;
+    @Column(name = "created_by")
+    private String createdBy;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
-    private User assignedTo;
+    private User assignee;
+    @Column(name = "assigned_to")
+    private String assignedTo;
 
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
+    @Column(name="project_name")
+    private String projectName;
 
-    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "task")
-    @Column(name="task_attachments")
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="task_id", referencedColumnName = "id")
     private Set<TaskAttachment> taskAttachments;
+
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="task_id", referencedColumnName = "id")
+    private Set<TaskComment> taskComments;
+
 }
