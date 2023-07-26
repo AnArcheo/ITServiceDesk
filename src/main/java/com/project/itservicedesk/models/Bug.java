@@ -48,6 +48,8 @@ public class Bug {
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
+    @Column(name="project_name")
+    private String projectName;
 
     @Column(name="created_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -61,19 +63,26 @@ public class Bug {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
-    private User reportedBy;
+    private User reporter;
+    @Column(name = "reported_by")
+    private String reportedBy;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
-    private User assignedTo;
+    private User assignee;
+    @Column(name="assigned_to")
+    private String assignedTo;
 
     @Column(name="modified_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
 
-
-    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "bug")
-    @Column(name="bug_attachments")
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="bug_id", referencedColumnName = "id")
     private Set<BugAttachment> bugAttachments;
+
+    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="bug_id", referencedColumnName = "id")
+    private Set<BugComment> bugComments;
 }
