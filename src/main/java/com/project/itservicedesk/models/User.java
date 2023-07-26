@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Type;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="users")
-public class User {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,33 +71,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
     private Set<Project> projects = new HashSet<>();
 
-    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "assignedTo")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "assignee")
     private Set<Task> assignedTasks = new HashSet<>();
 
-    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "createdBy")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "creator")
     private Set<Task> createdTasks = new HashSet<>();
 
-    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "assignedTo")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "assignee")
     private Set<Bug> assignedBugs = new HashSet<>();
 
-    @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "reportedBy")
-    @Column(name="reported_bugs")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "reporter")
     private Set<Bug> reportedBugs = new HashSet<>();
-
-//    public User(String username, String password, String email, String firstname, String lastname, Gender gender) {
-//        this.username = username;
-//        this.password = password;
-//        this.email = email;
-//        this.firstname = firstname;
-//        this.lastname = lastname;
-//        this.gender = gender;
-//        this.roles = new HashSet<>();
-//        this.projects = new HashSet<>();
-//        this.assignedTasks = new HashSet<>();
-//        this.createdTasks = new HashSet<>();
-//        this.assignedBugs = new HashSet<>();
-//        this.reportedBugs  = new HashSet<>();
-//    }
 
     public void addRole(Role role) {
         this.roles.add(role);
