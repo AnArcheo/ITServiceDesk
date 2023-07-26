@@ -1,15 +1,13 @@
 package com.project.itservicedesk.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name="task_attachments")
 public class TaskAttachment {
@@ -18,14 +16,13 @@ public class TaskAttachment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     private String name;
 
+    @NonNull
     private String type;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id", referencedColumnName = "id")
-    private Task task;
-
+    @NonNull
     @Lob
     private byte[] attachments;
 }
