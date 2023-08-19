@@ -1,4 +1,4 @@
-package com.project.itservicedesk.dto;
+package com.project.itservicedesk.dto_toRemove;
 
 import com.project.itservicedesk.models.Company;
 

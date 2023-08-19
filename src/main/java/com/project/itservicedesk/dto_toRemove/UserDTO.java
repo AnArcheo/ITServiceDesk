@@ -1,7 +1,5 @@
-package com.project.itservicedesk.dto;
+package com.project.itservicedesk.dto_toRemove;
 
-import com.project.itservicedesk.models.Project;
-import com.project.itservicedesk.models.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
