@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +35,7 @@ public class SecurityConfig {
     public DaoAuthenticationProvider authenticationProvider(
             PasswordEncoder passwordEncoder,
             UserDetailsService userDetailsService
-    ){
+    ) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         authenticationProvider.setUserDetailsService(userDetailsService);
@@ -45,7 +46,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(
             HttpSecurity httpSecurity,
             AuthenticationProvider authenticationProvider
-    ) throws Exception{
+    ) throws Exception {
         return httpSecurity.getSharedObject(AuthenticationManagerBuilder.class)
                 .authenticationProvider(authenticationProvider)
                 .build();
@@ -60,22 +61,39 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)// (csrf) -> csrf.disable() or provide method reference
                 .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/","/login", "/error", "/images/avatars/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
-                .requestMatchers("/users/**","/tasks/**","/bugs/**", "/images/**")
-                                .hasAnyAuthority("USER", "ADMIN") // TODO: add other endpoints and user roles
-                                .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN") // TODO: add other user roles
+                        .requestMatchers(
+                                "/", "/login", "/logout" ,"/message","/forgotPassword", "/loadSiteUnderConstruction",
+                                "/loadResetPassword/**", "/loadForgotPassword","/changePassword",
+                                "/resetPassword","/user/register", "/loadAccessDeniedPage", "/userProfile/**",
+                                "/error/**", "/images/avatars/**", "/css/**", "/js/**",
+                                "/webjars/**", "/resources/**", "/static/**", "/api/**")
+                                .permitAll()
+
+                        .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
+
+                        .requestMatchers( "/tasks/**", "/bugs/**", "/images/**")
+
+                        .hasAnyAuthority("USER", "ADMIN", "MANAGER", "IT TECHNICIAN", "DEVELOPER", "TESTER") // TODO: add other endpoints
+
+                        .requestMatchers("/users/**", "/projects/**", "/editProjectForm").hasAuthority("ADMIN") // TODO: add other user roles
+                        .requestMatchers(HttpMethod.DELETE).hasAuthority("ADMIN")
                 )
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll) // form -> form.permitAll() or provide method reference
+                .formLogin(form -> form.loginPage("/login").permitAll())
+
+                 // form -> form.permitAll() or provide method reference // AbstractAuthenticationFilterConfigurer::permitAll
                 .logout(logout -> logout
-                .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
+                        .logoutSuccessUrl("/login")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 )
+                .exceptionHandling(error -> error.accessDeniedHandler(accessDeniedHandler()))
                 .build();
     }
-
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDenied();
+    }
     @Bean
     @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
     SecurityFilterChain securityDisabled(HttpSecurity httpSecurity) throws Exception {

@@ -28,11 +28,9 @@ public class TaskComment {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-    @Column(name = "author")
-    private String author;
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
 
     @Column(name="comment_content", nullable = false)
     @NotEmpty(message = "Comment cannot be empty!")

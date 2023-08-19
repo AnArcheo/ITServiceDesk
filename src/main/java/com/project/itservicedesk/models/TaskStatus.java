@@ -9,7 +9,9 @@ public enum TaskStatus {
     NOT_STARTED("Not Started"),
     IN_PROGRESS("In Progress"),
     POSTPONED("Postponed"),
-    COMPLETED("Completed");
+    COMPLETED("Completed"),
+    CANCELLED("Cancelled"),
+    ON_HOLD("On Hold");
 
     private final String displayLabel;
 }
