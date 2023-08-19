@@ -1,8 +1,8 @@
 package com.project.itservicedesk.services;
 
-import com.project.itservicedesk.models.BugAttachment;
 import com.project.itservicedesk.models.TaskAttachment;
 import com.project.itservicedesk.repositories.TaskAttachmentRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,28 +14,41 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
+@Transactional// important when org.hibernate.HibernateException: Unable to access lob stream error//disables autocommit
 @AllArgsConstructor
 public class TaskAttachmentService {
 
     private final TaskAttachmentRepository taskAttachmentRepository;
 
-    public TaskAttachment saveAttachment(MultipartFile file) throws IOException {
+    public TaskAttachment convertMultipartToAttachment(MultipartFile file) throws IOException {
         String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        TaskAttachment bugAttachment = new TaskAttachment(filename,
+        TaskAttachment taskAttachment = new TaskAttachment(filename,
                 Objects.requireNonNull(file.getContentType()), file.getBytes());
 
-        return taskAttachmentRepository.save(bugAttachment);
+        return taskAttachment;
     }
 
-    public TaskAttachment getAttachment(Long id){
+    public TaskAttachment getAttachment(Long id) {
         return taskAttachmentRepository.findById(id).orElseThrow();
     }
 
-    public Stream<TaskAttachment> getAllAttachments(){
+    public Stream<TaskAttachment> getAllAttachments() {
         return taskAttachmentRepository.findAll().stream();
     }
 
     public List<TaskAttachment> getAllAttachmentsForTaskId(Long id) {
         return taskAttachmentRepository.findAllByTaskId(id);
+    }
+
+    public void delete(TaskAttachment attachment) {
+        taskAttachmentRepository.delete(attachment);
+    }
+
+    public TaskAttachment save(TaskAttachment attachmentFile) {
+        return taskAttachmentRepository.save(attachmentFile);
+    }
+
+    public List<TaskAttachment> saveAndFlush(List<TaskAttachment> attachmentFiles) {
+        return taskAttachmentRepository.saveAllAndFlush(attachmentFiles);
     }
 }

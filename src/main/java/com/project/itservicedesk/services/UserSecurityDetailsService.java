@@ -25,13 +25,16 @@ public class UserSecurityDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        List<SimpleGrantedAuthority> grantedAuthorities = getUserAuthorities(user.getRoles());
+            User user = userRepository.findByUsername(username);
 
+        if(user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        List<SimpleGrantedAuthority> grantedAuthorities = getUserAuthorities(user.getRoles());
         return createUserAuthentication(user, grantedAuthorities);
     }
 
-    private UserDetails createUserAuthentication(User user, List<SimpleGrantedAuthority> grantedAuthorities) {
+    UserDetails createUserAuthentication(User user, List<SimpleGrantedAuthority> grantedAuthorities) {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
@@ -43,7 +46,7 @@ public class UserSecurityDetailsService implements UserDetailsService {
         );
     }
 
-    private List<SimpleGrantedAuthority> getUserAuthorities(Set<Role> roles) {
+    List<SimpleGrantedAuthority> getUserAuthorities(Set<Role> roles) {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .distinct()

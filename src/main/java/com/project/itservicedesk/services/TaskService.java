@@ -1,9 +1,8 @@
 package com.project.itservicedesk.services;
 
 import com.project.itservicedesk.models.Task;
-import com.project.itservicedesk.repositories.ProjectRepository;
 import com.project.itservicedesk.repositories.TaskRepository;
-import com.project.itservicedesk.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
+
 
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
@@ -58,10 +57,9 @@ public class TaskService {
         return taskRepository.findAll(pageable);
     }
 
-//    // or other version
-//    public Page<Task> getPaginatedTaskList(int pageNumber, int pageSize){
-//        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
-//        return tasksRepository.findAll(pageable);
-//    }
+    public List<Task> getAllTasksCreatedOrAssignedTo(Long id) {
+        return taskRepository.findAllByAssignedToOrCreatedBy(id);
+    }
+
 
 }
