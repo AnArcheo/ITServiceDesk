@@ -1,30 +1,33 @@
 package com.project.itservicedesk.controllers;
 
-import com.project.itservicedesk.models.Task;
-import com.project.itservicedesk.models.TaskAttachment;
-import com.project.itservicedesk.services.TaskAttachmentService;
-import com.project.itservicedesk.services.TaskService;
+import com.project.itservicedesk.models.*;
+import com.project.itservicedesk.services.*;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class TaskController {
-    private static final int[] PAGE_SIZES = { 5, 10, 15, 25 };
+    private static final int[] PAGE_SIZES = {5, 10, 15, 25};
 
     private final TaskService taskService;
     private final TaskAttachmentService taskAttachmentService;
+    private final TaskCommentService taskCommentService;
+    private final UserService userService;
+    private final ProjectService projectService;
+
     @GetMapping("/tasks")
     public String showAllTasksWithPagingAndSorting(Model model,
                                                    @RequestParam(required = false) String keyword,
@@ -32,8 +35,8 @@ public class TaskController {
                                                    @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
                                                    @RequestParam(defaultValue = "id,asc") String[] sort) {
 
-        try{
-            List<Task> tasks;
+        try {
+            List<Task> tasks = new ArrayList<Task>();
             String sortField = sort[0];
             String sortDirection = sort[1];
 
@@ -44,20 +47,26 @@ public class TaskController {
 
             Page<Task> pageTasks;
 
-            if(keyword == null){
+            if (keyword == null) {
                 pageTasks = taskService.getAll(pageable);
-            }else{
+            } else {
                 pageTasks = taskService.searchRepository(keyword, pageable);
-                if (pageTasks.isEmpty()){
+                model.addAttribute("keyword", keyword);
+                if (pageTasks.isEmpty()) {
                     model.addAttribute("message", "No Tasks Found!!!");
                 }
             }
             // model.addAttribute("taskList", taskService.getAllTasks());
             tasks = pageTasks.getContent();
-            List<TaskAttachment> attachments = taskAttachmentService.getAllAttachments().toList();
 
+            List<TaskAttachment> attachments = taskAttachmentService.getAllAttachments().toList();
+            List<TaskComment> comments = taskCommentService.getAllComments();
+
+            model.addAttribute("pageName", "tasks"); //for paging and sorting
+            model.addAttribute("page", page);
             model.addAttribute("taskList", tasks);
             model.addAttribute("attachments", attachments);
+            model.addAttribute("comments", comments);
             model.addAttribute("currentPage", pageTasks.getNumber() + 1);
             model.addAttribute("totalItems", pageTasks.getTotalElements());
             model.addAttribute("totalPages", pageTasks.getTotalPages());
@@ -67,71 +76,34 @@ public class TaskController {
             model.addAttribute("sortDirection", sortDirection);
             model.addAttribute("reverseSortDirection", sortDirection.equals("asc") ? "desc" : "asc");
 
-        }catch(Exception e){
+        } catch (Exception e) {
             model.addAttribute("message", e.getMessage());
         }
 
         return "tasks";
     }
-//TODO: get mapping showing details of task with comments and images
-    @GetMapping("/tasks/details/{id}")
-    public String showTaskDetails(@PathVariable("id") Long id, Model model){
-        model.addAttribute("task", taskService.findTaskById(id));
-        //TODO: include comment Service
-        //TODO: include Attachments service
-        return "taskDetails";//TODO: create html
-    }
 
+//    @PreAuthorize("hasAnyAuthority({'ADMIN', 'MANAGER'})")
+    @RolesAllowed({"ADMIN" ,"MANAGER"})
+    @GetMapping(value = "/tasks/delete/{id}")
+    public String deleteTask(@PathVariable("id") Long id) {
+        taskService.delete(taskService.findTaskById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Task does not exist")));
 
-
-    @GetMapping("/tasks/delete/{id}")
-    public String deleteTask(@PathVariable("id") Long id){
-//        taskService.delete(taskService.findTaskById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Task does not exist")));
-        taskService.deleteById(id);
         return "redirect:/tasks";
     }
 
     @GetMapping("/tasks/edit/{id}")
-    public String editTask(@PathVariable("id") Long id, Model model){
+    public String editTask(@PathVariable("id") Long id, Model model) {
         model.addAttribute("task", taskService.findTaskById(id));
+
+        List<User> listOfUsers = userService.listAllUsers();
+        model.addAttribute("listOfUsers", listOfUsers);
+        List<Project> listOfProjects = projectService.getAllProjects();
+        model.addAttribute("listOfProjects", listOfProjects);
+
         return "editTaskForm";
     }
-
-    //Attachments
-    //open form to add attachment
-
-    //TODO: upload file only for selected task id {id} -> move this to TaskFormController
-    @GetMapping("/tasks/{id}/files/new")
-    public String addAttachment(@PathVariable("id") Long id, Model model){
-        model.addAttribute("task", taskService.findTaskById(id));
-        return "upload_attachment_form";
-    }
-
-    @GetMapping("/tasks/{id}/files/show")
-    public String showTaskAttachments(@PathVariable("id") Long id, Model model){
-        model.addAttribute("attachments", taskAttachmentService.getAllAttachmentsForTaskId(id));
-        return "showAllAttachments"; //TODO: create html
-    }
-
-    @PostMapping("/tasks/{id}/files/upload")
-    public String uploadAttachments(@PathVariable("id") Long id, Model model, @RequestParam("files") MultipartFile[] files){
-        //create list of info about failed and successful uploads
-        List<String> uploadMessages = new ArrayList<>();
-
-        Arrays.stream(files).forEach(file -> {
-            try {
-                taskAttachmentService.saveAttachment(file);
-                uploadMessages.add(file.getOriginalFilename() + "[[ Upload SUCCESSFUL ]]");
-            }catch (Exception e){
-                uploadMessages.add(file.getOriginalFilename() + "[[ Upload FAILED ]]" + e.getMessage());
-            }
-        });
-
-        model.addAttribute("messages", uploadMessages);
-        return "upload_attachment_form";
-    }
-
 
 
 }

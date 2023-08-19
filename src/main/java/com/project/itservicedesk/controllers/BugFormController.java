@@ -1,12 +1,12 @@
 package com.project.itservicedesk.controllers;
 
 import com.project.itservicedesk.models.Project;
-import com.project.itservicedesk.models.Task;
-import com.project.itservicedesk.models.TaskAttachment;
+import com.project.itservicedesk.models.Bug;
+import com.project.itservicedesk.models.BugAttachment;
 import com.project.itservicedesk.models.User;
 import com.project.itservicedesk.services.ProjectService;
-import com.project.itservicedesk.services.TaskAttachmentService;
-import com.project.itservicedesk.services.TaskService;
+import com.project.itservicedesk.services.BugAttachmentService;
+import com.project.itservicedesk.services.BugService;
 import com.project.itservicedesk.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -25,65 +25,68 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-public class TaskFormController {
+public class BugFormController {
 
-    private TaskService taskService;
+    private BugService bugService;
     private ProjectService projectService;
     private UserService userService;
-    private TaskAttachmentService taskAttachmentService;
+    private BugAttachmentService bugAttachmentService;
 
-    @GetMapping("/tasks/createTask")
-    public String displayCreateTaskForm(Task task, Model model){
+    @GetMapping("/bugs/createBug")
+    public String displayCreateBugForm(Bug bug, Model model){
+
         List<User> listOfUsers = userService.listAllUsers();
         model.addAttribute("listOfUsers", listOfUsers);
+
         List<Project> listOfProjects = projectService.getAllProjects();
         model.addAttribute("listOfProjects", listOfProjects);
-        List<TaskAttachment> attachments = taskAttachmentService.getAllAttachments().toList();
+
+        List<BugAttachment> attachments = bugAttachmentService.getAllAttachments().toList();
         model.addAttribute("attachments", attachments);
-        return "newTaskForm";
+        return "newBugForm";
     }
 
-    @PostMapping("/tasks/submitNewTask")
-    public String createNewTask(@Valid @ModelAttribute("task")Task task, BindingResult result,
+    @PostMapping("/bugs/submitNewBug")
+    public String createNewBug(@Valid @ModelAttribute("bug")Bug bug, BindingResult result,
                                 Model model, Errors errors){
 
         List<User> listOfUsers = userService.listAllUsers();
         model.addAttribute("listOfUsers", listOfUsers);
         List<Project> listOfProjects = projectService.getAllProjects();
         model.addAttribute("listOfProjects", listOfProjects);
-        List<TaskAttachment> attachments = taskAttachmentService.getAllAttachments().toList();
+        List<BugAttachment> attachments = bugAttachmentService.getAllAttachments().toList();
         model.addAttribute("attachments", attachments);
 
         if(result.hasErrors()){
             model.addAttribute("listOfUsers", listOfUsers);
             model.addAttribute("listOfProjects", listOfProjects);
             model.addAttribute("attachments", attachments);
-            return "newTaskForm";
+            return "newBugForm";
         }
 
-
         String username = getCurrentLoggedUsername();
-        User creator = userService.findUserByUsername(username).orElseThrow();
 
-        task.setCreator(creator);
+        User reporter = userService.findUserByUsername(username).orElseThrow();
 
-        Task newTask = new Task();
-        newTask.setTitle(task.getTitle());
-        newTask.setStatus(task.getStatus());
-        newTask.setPriority(task.getPriority());
-        newTask.setDueDate(task.getDueDate());
-        newTask.setCreator(task.getCreator());
-        newTask.setAssignee(task.getAssignee());
-        newTask.setProject(task.getProject());
+        bug.setReporter(reporter);
 
-        taskService.save(task);
-        return "redirect:/tasks";
+        Bug newBug = new Bug();
+        newBug.setTitle(bug.getTitle());
+        newBug.setDescription(bug.getDescription());
+        newBug.setStatus(bug.getStatus());
+        newBug.setPriority(bug.getPriority());
+        newBug.setDueDate(bug.getDueDate());
+
+        newBug.setReporter(reporter);
+        newBug.setAssignee(bug.getAssignee());
+        newBug.setProject(bug.getProject());
+
+        bugService.save(bug);
+        return "redirect:/bugs";
     }
 
-
-
-    @PostMapping("/tasks/edit/{id}")
-    public String editTask(@PathVariable("id") Long id, @Valid @ModelAttribute("task")Task task,
+    @PostMapping("/bugs/edit/{id}")
+    public String editBug(@PathVariable("id") Long id, @Valid @ModelAttribute("bug")Bug bug,
                            Model model, BindingResult result, Errors errors){
 
         List<User> listOfUsers = userService.listAllUsers();
@@ -91,36 +94,34 @@ public class TaskFormController {
 
         List<Project> listOfProjects = projectService.getAllProjects();
         model.addAttribute("listOfProjects", listOfProjects);
-        List<TaskAttachment> attachments = taskAttachmentService.getAllAttachments().toList();
-        model.addAttribute("attachments", attachments);
         //TODO AD TO OTHER CONTROLLERS MODELS WHEN ERROR
 
         if(result.hasErrors()){
             model.addAttribute("listOfUsers", listOfUsers);
             model.addAttribute("listOfProjects", listOfProjects);
-            model.addAttribute("attachments", attachments);
-            return "editTaskForm";
+            return "editBugForm";
         }
 
-
-        Task taskToUpdate = taskService.findTaskById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No such Task ID"));
+        Bug bugToUpdate = bugService.findBugById(id)
+                .orElseThrow(() -> new IllegalArgumentException("No such Bug ID"));
 
         String username = getCurrentLoggedUsername();
 
-        User creator = userService.findUserByUsername(username).orElseThrow();
-        task.setCreator(creator);
+        User reporter = userService.findUserByUsername(username).orElseThrow();
+        bug.setReporter(reporter);
 
-        taskToUpdate.setTitle(task.getTitle());
-        taskToUpdate.setStatus(task.getStatus());
-        taskToUpdate.setPriority(task.getPriority());
-        taskToUpdate.setDueDate(task.getDueDate());
-        taskToUpdate.setCreator(task.getCreator());
-        taskToUpdate.setAssignee(task.getAssignee());
-        taskToUpdate.setProject(task.getProject());
-        taskService.save(taskToUpdate);
+        bugToUpdate.setTitle(bug.getTitle());
+        bugToUpdate.setDescription(bug.getDescription());
+        bugToUpdate.setStatus(bug.getStatus());
+        bugToUpdate.setPriority(bug.getPriority());
+        bugToUpdate.setDueDate(bug.getDueDate());
 
-        return "redirect:/tasks";
+        bugToUpdate.setReporter(reporter);
+        bugToUpdate.setAssignee(bug.getAssignee());
+        bugToUpdate.setProject(bug.getProject());
+        bugService.save(bugToUpdate);
+
+        return "redirect:/bugs";
     }
 
     private static String getCurrentLoggedUsername() {
