@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Task List</title>
+    <title>Bug List</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
@@ -33,7 +33,7 @@
                 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><i class="fa-solid fa-list-check"></i> Tasks</li>
+                        <li class="breadcrumb-item active" aria-current="page"><i class="fa-solid fa-bugs"></i> Issues/Bugs</li>
                     </ol>
                 </nav>
                 <br>
@@ -42,7 +42,7 @@
                      class="alert alert-warning alert-dismissible fade show text-center message"
                      role="alert">
                     [[${message}]]
-                    <a class="btn" href="/tasks" type="button">
+                    <a class="btn" href="/bugs" type="button">
                         <i class="fa fa-close"></i></a>
                 </div>
                 <!--searching and page size forms-->
@@ -50,7 +50,7 @@
                     <div class="row d-lg-flex">
                         <div class="col-md-9 mt-2" style="padding:0px">
                             <!--                            search by keyword form-->
-                            <form th:action="@{/tasks}" id="searchKeyword">
+                            <form th:action="@{/bugs}" id="searchKeyword">
                                 <div class="input-group">
                                     <div class="col-md-6 search">
                                         <input id="keyword" type="search" name="keyword" th:value="${keyword}" required
@@ -65,7 +65,7 @@
                                     <br>
                                     <!--                                    clear search button-->
                                     <div class="d-grid gap-2 d-md-block">
-                                        <a class="btn btn-info" href="/tasks" type="button">
+                                        <a class="btn btn-info" href="/bugs" type="button">
                                             <i class="fa fa-refresh"></i>Clear Search</a>
                                     </div>
                                 </div>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-3 mt-2" style="padding:0px">
                             <!--                            items per page form-->
-                            <form th:action="@{/tasks}" id="itemsPerPage">
+                            <form th:action="@{/bugs}" id="itemsPerPage">
                                 <div class="input-group">
                                     <label class="input-group-text" for="pageSize">Items per page:</label>
                                     <select form="itemsPerPage" name="pageSize" th:value="${pageSize}"
@@ -99,22 +99,24 @@
             </div>
             <br>
 
-            <!--            Create new task Button-->
+            <!--            Create new bug Button-->
             <div class="d-grid gap-2 d-md-block" style="padding-top: 1%; padding-bottom: 1%">
-                <a class="btn btn-outline-success" href="/tasks/createTask" type="button"><i
-                        class="fa-solid fa-plus-circle"></i>Create New Task</a>
+                <a class="btn btn-outline-success" href="/bugs/createBug" type="button"><i
+                        class="fa-solid fa-plus-circle"></i>Create New Bug/Issue</a>
             </div>
             <br>
 
             <!--table-->
             <!--            check for sorting-->
-            <div th:if="${taskList.size() > 0}">
-                <table id="taskList" class="table table-bordered table-striped">
+            <div th:if="${bugList.size() > 0}">
+                <table id="bugList" class="table table-bordered table-striped">
                     <thead class="table-dark">
                     <tr>
                         <th style="text-align: center;" th:replace="~{fragments/sorting :: sorting('id', 'ID')}"></th>
                         <th style="text-align: center;"
                             th:replace="~{fragments/sorting :: sorting('title', 'TITLE')}"></th>
+                        <th style="text-align: center;"
+                            th:replace="~{fragments/sorting :: sorting('description', 'DESCRIPTION')}"></th>
                         <th style="text-align: center"
                             th:replace="~{fragments/sorting :: sorting('status', 'STATUS')}"></th>
                         <th style="text-align: center"
@@ -126,7 +128,7 @@
                         <th style="text-align: center"
                             th:replace="~{fragments/sorting :: sorting('modifiedDate', 'MODIFIED')}"></th>
                         <th style="text-align: center"
-                            th:replace="~{fragments/sorting :: sorting('creator', 'CREATOR')}"></th>
+                            th:replace="~{fragments/sorting :: sorting('reporter', 'REPORTER')}"></th>
                         <th style="text-align: center"
                             th:replace="~{fragments/sorting :: sorting('assignee', 'ASSIGNEE')}"></th>
                         <th style="text-align: center"
@@ -136,68 +138,79 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="task : ${taskList}">
-                        <td style="text-align: center;width: 3%" th:text="${task.id}">ID</td>
-                        <td style="text-align: center; width: 11%" th:text="${task.title}">TITLE</td>
-                        <td style="text-align: center; width: 7%">
-                            <div th:switch="${task.status}">
-                                    <span th:case="${task.status.COMPLETED}" style="color: green"
-                                          th:text="${task.status.getDisplayLabel()}"></span>
-                                <span th:case="${task.status.POSTPONED}" style="color: darkgrey"
-                                      th:text="${task.status.getDisplayLabel()}"></span>
-                                <span th:case="${task.status.IN_PROGRESS}" style="color: darkorange"
-                                      th:text="${task.status.getDisplayLabel()}"></span>
-                                <span th:case="${task.status.NOT_STARTED}" style="color: darkblue"
-                                      th:text="${task.status.getDisplayLabel()}"></span>
-                                <span th:case="${task.status.CANCELLED}" style="color: deeppink"
-                                      th:text="${task.status.getDisplayLabel()}"></span>
-                                <span th:case="${task.status.ON_HOLD}" style="color: black"
-                                      th:text="${task.status.getDisplayLabel()}"></span>
+                    <tr th:each="bug : ${bugList}">
+                        <td style="text-align: center;width: 3%" th:text="${bug.id}">ID</td>
+                        <td style="text-align: center; width: 6%" th:text="${bug.title}">TITLE</td>
+                        <td style="text-align: center; max-width: 20px; text-wrap: normal; word-wrap: break-word" th:text="${bug.description}">DESCRIPTION</td>
+                        <td style="text-align: center; width: 6%">
+                            <div th:switch="${bug.status}">
+                                    <span th:case="${bug.status.RESOLVED}" style="color: green"
+                                          th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.OPEN}" style="color: blueviolet"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.POSTPONED}" style="color: darkgrey"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.IN_PROGRESS}" style="color: darkorange"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.NOT_STARTED}" style="color: darkblue"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.CANCELLED}" style="color: deeppink"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.NOT_A_BUG}" style="color: black"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.NOT_AN_ISSUE}" style="color: saddlebrown"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.TO_BE_TESTED}" style="color: rebeccapurple"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.REVIEWING}" style="color: red"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
+                                <span th:case="${bug.status.CLOSED}" style="color: darkslategray"
+                                      th:text="${bug.status.getDisplayLabel()}"></span>
                             </div>
                         </td>
 
-                        <td style="text-align: center; width: 7%">
-                            <div th:switch="${task.priority}">
-                                    <span th:case="${task.priority.SEVERE}" class="btn btn-dark btn-block disabled"
-                                          th:text="${task.priority.getDisplayLabel()}"></span>
-                                <span th:case="${task.priority.HIGH}" class="btn btn-danger disabled"
-                                      th:text="${task.priority.getDisplayLabel()}"></span>
-                                <span th:case="${task.priority.MEDIUM}" class="btn btn-warning disabled"
-                                      th:text="${task.priority.getDisplayLabel()}"></span>
-                                <span th:case="${task.priority.LOW}" class="btn btn-info disabled"
-                                      th:text="${task.priority.getDisplayLabel()}"></span>
+                        <td style="text-align: center; width: 5%">
+                            <div th:switch="${bug.priority}">
+                                    <span th:case="${bug.priority.SEVERE}" class="btn btn-dark btn-block disabled"
+                                          th:text="${bug.priority.getDisplayLabel()}"></span>
+                                <span th:case="${bug.priority.HIGH}" class="btn btn-danger disabled"
+                                      th:text="${bug.priority.getDisplayLabel()}"></span>
+                                <span th:case="${bug.priority.MEDIUM}" class="btn btn-warning disabled"
+                                      th:text="${bug.priority.getDisplayLabel()}"></span>
+                                <span th:case="${bug.priority.LOW}" class="btn btn-info disabled"
+                                      th:text="${bug.priority.getDisplayLabel()}"></span>
                             </div>
                         </td>
                         <td style="text-align: center; width: 8%"
-                            th:text="${#temporals.format(task.createdDate, 'dd/MM/yyyy HH:mm')}">CREATED
+                            th:text="${#temporals.format(bug.createdDate, 'dd/MM/yyyy HH:mm')}">CREATED
                         </td>
                         <td style="text-align: center; width: 7%"
-                            th:text="${#dates.format(task.dueDate, 'dd/MM/yyyy')}">
+                            th:text="${#dates.format(bug.dueDate, 'dd/MM/yyyy')}">
                             DUE DATE
                         </td>
                         <td style="text-align: center; width: 8%"
-                            th:text="${#temporals.format(task.modifiedDate, 'dd/MM/yyyy HH:mm')}">MODIFIED
+                            th:text="${#temporals.format(bug.modifiedDate, 'dd/MM/yyyy HH:mm')}">MODIFIED
                         </td>
-                        <td style="text-align: center;width: 6%" th:text="${task.creator.username}">Created By</td>
-                        <td style="text-align: center;width: 6%" th:text="${task.assignee.username}">Assignee</td>
-                        <td style="text-align: center;width: 6%" th:text="${task.project.projectName}">Project</td>
+                        <td style="text-align: center;width: 6%" th:text="${bug.reporter.username}">Reporter</td>
+                        <td style="text-align: center;width: 6%" th:text="${bug.assignee.username}">Assignee</td>
+                        <td style="text-align: center;width: 6%" th:text="${bug.project.projectName}">Project</td>
                         <!--                        attachment column-->
 
-                        <div class="btn-group-sm" style="width: 3%">
+                        <div class="btn-group-sm" style="width: 2%">
                             <td style="text-align: center; width: 3%">
                                 <div class="badge" style="position: relative">
-                                    <span th:if="${task.taskAttachments.size() > 0}">
-                                        <a th:href="@{/tasks/{id}/files(id=${task.id})}"
+                                    <span th:if="${bug.bugAttachments.size() > 0}">
+                                        <a th:href="@{/bugs/{id}/files(id=${bug.id})}"
                                            class="btn btn-light btn-sm" type="button" style="margin:5px;">
                                             <i class="fa-solid fa-paperclip"></i>
                                         <span class="icon-badge"
                                               style="background-color: crimson; border-radius: 50%;text-align: center;
                                               color: white; font-size: 12px; width: 15px; height:17px; position: absolute"
-                                              th:text="${task.getTaskAttachments().size()}">6</span>
+                                              th:text="${bug.getBugAttachments().size()}">6</span>
                                         </a>
                                     </span>
-                                    <span th:unless="${task.taskAttachments.size() > 0}">
-                                        <a th:href="@{/tasks/{id}/files(id=${task.id})}"
+                                    <span th:unless="${bug.bugAttachments.size() > 0}">
+                                        <a th:href="@{/bugs/{id}/files(id=${bug.id})}"
                                            class="btn btn-light btn-sm" type="button" style="margin:5px;">
                                             <i class="fa-solid fa-paperclip"></i>
                                         </a>
@@ -211,30 +224,30 @@
                         <div class="btn-group-lg" style="width: 8%">
                             <td style="text-align: center; width: 10%">
                                 <div class="badge" style="position: relative">
-                                    <span th:if="${task.getTaskComments().size() > 0}">
-                                        <a th:href="@{/tasks/{id}/comments(id=${task.id})}"
+                                    <span th:if="${bug.getBugComments().size() > 0}">
+                                        <a th:href="@{/bugs/{id}/comments(id=${bug.id})}"
                                            class="btn btn-light btn-sm" type="button" style="margin:5px;">
                                         <i class="fa-solid fa-comments"></i>
                                         <span class="icon-badge"
                                               style="background-color: crimson; border-radius: 50%;text-align: center;
                                               color: white; font-size: 12px; width: 15px; height:17px; position: absolute"
-                                              th:text="${task.getTaskComments().size()}">6</span>
+                                              th:text="${bug.getBugComments().size()}">6</span>
                                         </a>
                                     </span>
-                                    <span th:unless="${task.getTaskComments().size() > 0}">
-                                        <a th:href="@{/tasks/{id}/comments(id=${task.id})}"
+                                    <span th:unless="${bug.getBugComments().size() > 0}">
+                                        <a th:href="@{/bugs/{id}/comments(id=${bug.id})}"
                                            class="btn btn-light btn-sm" type="button" style="margin:5px;">
                                         <i class="fa-solid fa-comments"></i>
                                         </a>
                                     </span>
                                 </div>
 
-                                <a th:href="@{/tasks/edit/{id}(id=${task.id})}"
+                                <a th:href="@{/bugs/edit/{id}(id=${bug.id})}"
                                    class="btn btn-warning btn-sm" type="button" style="margin:2px;"> <i
                                         class="fa-solid fa-pen"></i>
                                 </a>
 
-                                <a th:href="@{/tasks/delete/{id}(id=${task.id})}" methods="de"
+                                <a th:href="@{/bugs/delete/{id}(id=${bug.id})}"
                                    class="btn btn-danger btn-sm" type="button" style="margin:2px;"> <i
                                         class="fa-solid fa-trash-can"></i>
                                 </a>
@@ -244,10 +257,10 @@
                     </tbody>
                 </table>
 
-                <!--                    if no tasks found-->
+                <!--                    if no bugs found-->
                 <div>
-                    <div class="" th:unless="${taskList.size() > 0}">
-                        <span>No tasks found!</span>
+                    <div class="" th:unless="${bugList.size() > 0}">
+                        <span>No bugs found!</span>
                     </div>
                 </div>
             </div>
@@ -268,7 +281,7 @@
                     <a class="page-link" href="#">...</a>
                 </li>
                 <li class="page-item" th:classappend="${page == currentPage} ? 'active'"
-                    th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+                    th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1  , currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
                     <a th:replace="~{fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})}"></a>
                 </li>
                 <li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
@@ -295,7 +308,7 @@
         $("#btnClear").on("click", function (e) {
             e.preventDefault();
             $("#keyword").text("");
-            window.location = "[[@{/tasks}]]";
+            window.location = "[[@{/bugs}]]";
         });
     });
 

@@ -1,11 +1,9 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout.html}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Task Form</title>
-
+    <title>New Task Form</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
@@ -21,33 +19,35 @@
         <div class="row mt-5">
             <!--    back button-->
             <div class="d-grid gap-2 d-md-block">
-                <a class="btn btn-outline-warning" href="/tasks" type="button">
-                    <i class="fa fa-arrow-left"></i> Back</a>
+                <a class="btn btn-outline-warning" href="/bugs" type="button">
+                    <i class="fa fa-arrow-left"></i>Back</a>
             </div>
             <br>
             <br>
             <!--    Form-->
             <div class="col-6 mt-5 mx-md-3">
-                <h2>Edit Task</h2>
+                <h2>Create A New Bug/Issue</h2>
                 <br>
-
-                <br>
-                <form action="#" th:action="@{/tasks/edit/{id}(id=${id})}" th:object="${task}" method="post">
+                <form action="#" th:action="@{/bugs/submitNewBug}" th:object="${bug}" method="post">
                     <div class="form-group">
-                        <label for="title"> Title</label>
-                        <input class="" type="text" th:field="*{title}" id="title" placeholder="Title">
+                        <label style="font-weight: bold" for="title"> TITLE </label>
+                        <input class="form-control" type="text" th:field="*{title}" id="title" placeholder="Title">
                         <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
                     </div>
                     <br>
-
+                    <div class="form-group">
+                        <label style="font-weight: bold" for="description"> DESCRIPTION </label>
+                        <textarea class="form-control" rows="4" cols="4" th:field="*{description}" id="description" placeholder="Description"></textarea>
+                        <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                    </div>
+                    <br>
                     <div class="form-group">
                         <label style="font-weight: bold" for="status"> STATUS </label>
                         <select class="form-select" id="status" th:field="*{status}">
                             <option value="" hidden>Select Status</option>
-                            <option th:each="statusValue : ${T(com.project.itservicedesk.models.TaskStatus).values()}"
+                            <option th:each="statusValue : ${T(com.project.itservicedesk.models.BugStatus).values()}"
                                     th:value="${statusValue}"
-                                    th:text="${statusValue.getDisplayLabel()}">Status
-                            </option>
+                                    th:text="${statusValue.getDisplayLabel()}">Status</option>
                         </select>
                     </div>
                     <br>
@@ -57,20 +57,17 @@
                             <option value="" hidden>Select Priority</option>
                             <option th:each="priorityValue : ${T(com.project.itservicedesk.models.PriorityStatus).values()}"
                                     th:value="${priorityValue}"
-                                    th:text="${priorityValue.getDisplayLabel()}">Priority
-                            </option>
+                                    th:text="${priorityValue.getDisplayLabel()}">Priority</option>
                         </select>
                     </div>
                     <br>
                     <div class="form-group">
                         <label style="font-weight: bold" for="dueDate">DUE DATE</label>
                         <div>
-                            <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}"/>
+                            <input type="date" class="form-control" id="dueDate" th:field="*{dueDate}" />
                             <div style="color:red" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
                         </div>
                     </div>
-                    <br>
-
                     <!--Creator - Author of the Task will be added automatically based on log in credentials-->
                     <br>
                     <div class="form-group">
@@ -83,8 +80,7 @@
                                         th:text="${assignee.username}"> Assignee
                                 </option>
                             </select>
-                            <div style="color:red" th:if="${#fields.hasErrors('assignee')}"
-                                 th:errors="*{assignee}"></div>
+                            <div style="color:red" th:if="${#fields.hasErrors('assignee')}" th:errors="*{assignee}"></div>
                         </div>
                     </div>
                     <br>
@@ -98,23 +94,20 @@
                                         th:text="${project.projectName}"> Project
                                 </option>
                             </select>
-                            <div style="color:red" th:if="${#fields.hasErrors('project')}"
-                                 th:errors="*{project}"></div>
+                            <div style="color:red" th:if="${#fields.hasErrors('project')}" th:errors="*{project}"></div>
                         </div>
                     </div>
+
+                    <br>
                     <br>
                     <button class="btn btn-primary" type="submit">Submit</button>
 
                 </form>
-                <br>
-
-
             </div>
-
         </div>
     </div>
 </div>
 
-</body>
 
+</body>
 </html>

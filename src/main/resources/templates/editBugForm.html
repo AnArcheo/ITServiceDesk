@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Task Form</title>
+    <title>Edit Bug/Issue Form</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
           rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -21,30 +21,35 @@
         <div class="row mt-5">
             <!--    back button-->
             <div class="d-grid gap-2 d-md-block">
-                <a class="btn btn-outline-warning" href="/tasks" type="button">
+                <a class="btn btn-outline-warning" href="/bugs" type="button">
                     <i class="fa fa-arrow-left"></i> Back</a>
             </div>
             <br>
             <br>
             <!--    Form-->
             <div class="col-6 mt-5 mx-md-3">
-                <h2>Edit Task</h2>
+                <h2>Edit Bug</h2>
                 <br>
 
                 <br>
-                <form action="#" th:action="@{/tasks/edit/{id}(id=${id})}" th:object="${task}" method="post">
+                <form action="#" th:action="@{/bugs/edit/{id}(id=${id})}" th:object="${bug}" method="post">
                     <div class="form-group">
                         <label for="title"> Title</label>
                         <input class="" type="text" th:field="*{title}" id="title" placeholder="Title">
                         <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
                     </div>
                     <br>
-
+                    <div class="form-group">
+                        <label style="font-weight: bold" for="description"> DESCRIPTION </label>
+                        <textarea class="form-control" rows="4" cols="4" th:field="*{description}" id="description" placeholder="Description"></textarea>
+                        <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                    </div>
+                    <br>
                     <div class="form-group">
                         <label style="font-weight: bold" for="status"> STATUS </label>
                         <select class="form-select" id="status" th:field="*{status}">
                             <option value="" hidden>Select Status</option>
-                            <option th:each="statusValue : ${T(com.project.itservicedesk.models.TaskStatus).values()}"
+                            <option th:each="statusValue : ${T(com.project.itservicedesk.models.BugStatus).values()}"
                                     th:value="${statusValue}"
                                     th:text="${statusValue.getDisplayLabel()}">Status
                             </option>
@@ -71,7 +76,7 @@
                     </div>
                     <br>
 
-                    <!--Creator - Author of the Task will be added automatically based on log in credentials-->
+                    <!--Creator - Author of the Bug will be added automatically based on log in credentials-->
                     <br>
                     <div class="form-group">
                         <label style="font-weight: bold" for="assignee">ASSIGNEE</label>

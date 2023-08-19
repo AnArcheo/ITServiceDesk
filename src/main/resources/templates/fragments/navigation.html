@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Header</title>
@@ -7,44 +7,129 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light" th:fragment="navigation">
+<nav class="navbar navbar-expand-lg navbar-light" th:fragment="navigation">
 
-        <div class="container-fluid" style="margin: 0px;padding-left: 15%;padding-bottom:5px;padding-top:25px;height: 80px;background-color: #554d4d;color: lightgray;position: absolute;font-size: 25px">
-            <a class="navbar-brand" style="text-decoration:none; color: inherit"><i class="fa fa-diagram-project"></i><span> IT Service Desk</span></a>
-<!--                <a href="/" type="button"  style="text-decoration:none; color: inherit">-->
-<!--                    <i class="fa fa-home" aria-hidden="true"></i>-->
-<!--                    <span>Home</span>-->
-<!--                    </a>-->
+    <div class="container-fluid"
+         style="margin: 0px;padding-left: 15%;padding-bottom:5px;padding-top:25px;height: 100px; background-color: #554d4d;color: lightgray;position: absolute;font-size: 25px">
+        <a class="navbar-brand" style="text-decoration:none; color: inherit"><i class="fa fa-diagram-project"></i><span> IT Service Desk</span></a>
+        <!--                <a href="/" type="button"  style="text-decoration:none; color: inherit">-->
+        <!--                    <i class="fa fa-home" aria-hidden="true"></i>-->
+        <!--                    <span>Home</span>-->
+        <!--                    </a>-->
 
+<!--this is visible to authenticated users-->
+        <div sec:authorize="isAuthenticated()">
+            <div class="nav-list justify-content-end" id="navbarNav" style="margin: 0px;padding-left: 15%;padding-bottom:5px;padding-top:25px;">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/" style="text-decoration:none; color: inherit;"><i class="fa fa-home"
+                                                                                                      aria-hidden="true"></i></a>
+                    </li>
 
-                <div class="nav-list justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#"  style="text-decoration:none; color: inherit;"><i class="fa fa-home" aria-hidden="true"></i></a>
-                        </li>
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="#"  style="text-decoration:none; color: inherit;">Features</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="#"  style="text-decoration:none; color: inherit;">Pricing</a>-->
-<!--                        </li>-->
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" tabindex="-1" style="text-decoration:none; color: inherit;padding-right: 50px">
-                                <i class="fa-solid fa-circle-user" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+                    <li class="nav-item dropdown pe-3">
 
+                        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+<!--                            for alt: &#128102;   &#129489;-->
+                            <img th:src="@{'/images/avatars/' + ${#authentication.name} + '.png'}" style="width:40px;height:40px;"
+                                 alt="&#127773;"  class="rounded-circle">
 
-<!--            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">-->
-<!--                <ul class="nav navbar-nav navbar-right">-->
-<!--                    <li><a class="nav-item nav-link active" href="about">About</a></li>-->
-<!--                </ul>-->
-<!--            </div>-->
+                            <span class="d-none d-md-block dropdown-toggle ps-2" style="color: lightgray" sec:authentication="principal.username"> </span>
 
+                        </a><!-- End Profile Iamge Icon -->
 
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                            <li class="dropdown-header">
+                                <!--                            //TODO: add name and role-->
+
+                                <span sec:authentication="principal.username"></span>
+
+                                <br>
+
+                                <span sec:authentication="principal.authorities">Web Designer</span>
+
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" th:href="@{/userProfile/{username}(username=${#authentication.name})}">
+                                    <i class="fa-regular fa-id-card"></i>
+                                    <span> My Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" th:href="@{/loadForgotPassword}" >
+                                    <i class="fa-solid fa-gear"></i>
+                                    <span> Reset Password</span>
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <!--                        <li>-->
+                            <!--                            <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">-->
+                            <!--                                <i class="bi bi-question-circle"></i>-->
+                            <!--                                <span>Need Help?</span>-->
+                            <!--                            </a>-->
+                            <!--                        </li>-->
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="/logout">
+                                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                                    <span> Sign Out</span>
+                                </a>
+                            </li>
+
+                        </ul><!-- End Profile Dropdown Items -->
+                    </li><!-- End Profile Nav -->
+                </ul>
+            </div>
         </div>
-    </nav>
+
+<div sec:authorize="isAnonymous()">
+    <!--        this is visible to anonymous users-->
+    <div class="nav-list justify-content-end" id="navbarNav2" style="margin: 0px;padding-left: 15%;padding-bottom:5px;padding-top:25px;">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="/" style="text-decoration:none; color: inherit;"><i class="fa fa-home" aria-hidden="true"></i></a>
+            </li>
+
+            <li class="nav-item dropdown pe-3">
+
+                <a class="nav-link nav-profile d-flex align-items-center pe-0"style="text-decoration:none; color: inherit;" href="#" data-bs-toggle="dropdown">
+
+<!--                    <i class="fa-solid fa-circle-user fa-lg"></i>-->
+                    <img th:src="@{'/images/avatars/defaultAvatar.png'}" style="background: white;width:40px;height:40px;"
+                         alt=""  class="rounded-circle">
+                    <span class="d-none d-md-block dropdown-toggle ps-2" style="color: lightgray"> Log In </span>
+
+                </a><!-- End Profile Image Icon -->
+
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="/login">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            <span> Login</span>
+                        </a>
+                    </li>
+
+                </ul><!-- End Profile Dropdown Items -->
+            </li><!-- End Profile Nav -->
+        </ul>
+    </div>
+</div>
+
+    </div>
+</nav>
 </body>
 </html>

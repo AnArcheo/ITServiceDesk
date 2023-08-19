@@ -10,7 +10,7 @@
 
 
 <a  class="page-link"
-   th:href="@{'/?' + ${keyword !=null && keyword !=''? 'keyword=' + keyword + '&' : ''}
+   th:href="@{'/' + ${pageName} + '?' + ${keyword !=null && keyword !=''? 'keyword=' + keyword + '&' : ''}
                            + 'page=' + ${pageNum} + '&pageSize=' + ${pageSize}
                            + ${sortField!=null ? '&sort=' + sortField + ',' + sortDirection : ''}}"
    th:title="${tooltip}" rel="tooltip">

@@ -8,12 +8,13 @@
 <body>
 <div th:fragment="sorting(field, label)">
     <th scope="col">
-        <a th:href="@{'/?' + ${keyword !=null && keyword!=''? 'keyword=' + keyword + '&' : ''}
+        <a  th:href="@{'/' + ${pageName} + '?' + ${keyword != null && keyword != ''? 'keyword=' + keyword + '&' : ''}
                 + 'page=' + ${currentPage} + '&size=' + ${pageSize}
                 + ${sortField!=null ? '&sort=' + field + ',' + (sortField == field ? reverseSortDirection : sortDirection) : ''}}">
             [[${label}]]
         <span th:if="${sortField == field}"
-              th:class="${sortDirection == 'asc' ? 'fas fa-arrow-down-short-wide' : 'fas fa-arrow-down-wide-short'}"></span></a>
+              th:class="${sortDirection == 'asc' ? 'fas fa-arrow-down-short-wide' : 'fas fa-arrow-down-wide-short'}"></span>
+        </a>
     </th>
 </div>
 </body>

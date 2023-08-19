@@ -1,38 +1,114 @@
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
 <head>
-  <meta charset="UTF-8">
-  <title>Spring Security</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task List</title>
 
-  <link th:rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.1/css/all.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+
+    <link th:rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.1/css/all.css">
+
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
 
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand">IT Service Desk Dashboard</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-<br /><br />
+<body style="margin: 0px; padding: 0px">
+<div layout:fragment="content">
+    <div class="container">
+        <div class="row" style="margin-top: 15%">
+            <br>
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><a href="/"><i class="fa-solid fa-house"></i> Home</a></li>
+                </ol>
+            </nav>
+            <br>
+            <p></p>
+            <p></p>
+            <div class="row row-cols-1 row-cols-sm-3">
+                <div class="col">
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-body" style="text-align: center" >
+                            <i class="fa-solid fa-diagram-project fa-2xl"></i>
+                            <p></p>
+                            <h5 style="font-weight: bold" class="card-title">Projects</h5>
+                            <p class="card-text">Manage Active Projects [ADMIN}</p>
+                            <a href="/projects" class="btn btn-light">Go To</a>
+                        </div>
+                    </div>
+                </div>
 
-<div class="container">
-  <div class="row">
-    <h1> IT Service Desk</h1>
-  </div>
+                <div class="col">
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-body" style="text-align: center" >
+                            <i class="fa-solid fa-list-check fa-2xl"></i>
+                            <p></p>
+                            <h5 style="font-weight: bold" class="card-title">Tasks</h5>
+                            <p class="card-text">Manage Active Tasks</p>
+                            <a href="/tasks" class="btn btn-light">Go To</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-body" style="text-align: center" >
+                            <i class="fa-solid fa-bug-slash fa-2xl"></i>
+                            <p></p>
+                            <h5 style="font-weight: bold" class="card-title">Bug Tracker</h5>
+                            <p class="card-text">Manage Active Issues</p>
+                            <a href="/bugs" class="btn btn-light">Go To</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-body" style="text-align: center" >
+                            <i class="fa-solid fa-user-plus fa-2xl"></i>
+                            <p></p>
+                            <h5 style="font-weight: bold" class="card-title">Register New User</h5>
+                            <p class="card-text">Create User Account [ADMIN]</p>
+                            <a href="/user/register" class="btn btn-light">Go To</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-body" style="text-align: center" >
+                            <i class="fa-solid fa-users fa-2xl"></i>
+                            <p></p>
+                            <h5 style="font-weight: bold" class="card-title">Users</h5>
+                            <p class="card-text">Manage Users List [ADMIN]</p>
+                            <a href="/users" class="btn btn-light">Go To</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-secondary mb-3">
+                        <div class="card-body" style="text-align: center" >
+                            <i class="fa-solid fa-gears fa-2xl"></i>
+                            <p></p>
+                            <h5 style="font-weight: bold" class="card-title">Settings</h5>
+                            <p class="card-text">Manage Content [ADMIN]</p>
+                            <a href="/loadSiteUnderConstruction" class="btn btn-light">Go To</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 </body>
 </html>
