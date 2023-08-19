@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@ToString(of = "name")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -20,5 +19,8 @@ public class Role {
     @Column(nullable = false, unique = true, length = 45)
     private String name;
 
-
+    @Override
+    public String toString() {
+        return name;
+    }
 }

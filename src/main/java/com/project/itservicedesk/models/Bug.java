@@ -1,5 +1,7 @@
 package com.project.itservicedesk.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@ToString(of = {"title", "description", "createdDate", "reportedBy", "project"})
+@ToString(of = {"title", "description", "createdDate", "reporter", "project"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -29,7 +31,7 @@ public class Bug {
 
     @Column(name="title", nullable = false)
     @NotEmpty(message = "Title cannot be empty!")
-    @Size(min = 5, max = 30, message = "Title must have minimum 5 characters and maximum 30 characters long")
+    @Size(min = 5, max = 50, message = "Title must have minimum 5 characters and maximum 30 characters long")
     private String title;
 
     @Column(name="description", nullable = false)
@@ -48,8 +50,6 @@ public class Bug {
     @ManyToOne
     @JoinColumn(name = "project_id", referencedColumnName = "id")
     private Project project;
-    @Column(name="project_name")
-    private String projectName;
 
     @Column(name="created_date", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -61,27 +61,27 @@ public class Bug {
     @NotNull(message = "Due Date cannot be empty!")
     private Date dueDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonBackReference
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "reporter_id", referencedColumnName = "id")
     private User reporter;
-    @Column(name = "reported_by")
-    private String reportedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonBackReference
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User assignee;
-    @Column(name="assigned_to")
-    private String assignedTo;
 
     @Column(name="modified_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
 
+    @JsonManagedReference
     @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="bug_id", referencedColumnName = "id")
     private Set<BugAttachment> bugAttachments;
 
+    @JsonManagedReference
     @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="bug_id", referencedColumnName = "id")
     private Set<BugComment> bugComments;

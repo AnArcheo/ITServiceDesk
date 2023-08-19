@@ -1,5 +1,6 @@
 package com.project.itservicedesk.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,9 +21,13 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @Column(name = "Company_name", nullable = false, unique = true)
     private String companyName;
 
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
-    private Set<Project> projects = new HashSet<>();
+    private Set<Project> projects;
+
+
 }

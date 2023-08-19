@@ -1,5 +1,6 @@
 package com.project.itservicedesk.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-@ToString(of = {"author", "commentContent"})
+@ToString(of = {"commentContent"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -28,11 +29,10 @@ public class BugComment {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-    @Column(name = "author")
-    private String author;
+    @JsonManagedReference
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
 
     @Column(name="comment_content", nullable = false)
     @NotEmpty(message = "Comment cannot be empty!")

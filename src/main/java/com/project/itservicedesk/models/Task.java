@@ -1,5 +1,7 @@
 package com.project.itservicedesk.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -11,12 +13,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @Builder
-@ToString(of = {"title", "project", "createdDate"})
+@ToString(of = {"title"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -55,31 +58,30 @@ public class Task {
     @UpdateTimestamp
     private LocalDateTime modifiedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonManagedReference
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "creator_id", referencedColumnName = "id")
     private User creator;
-    @Column(name = "created_by")
-    private String createdBy;
 
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable=false, updatable=false)
+    @JsonManagedReference
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User assignee;
-    @Column(name = "assigned_to")
-    private String assignedTo;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id", referencedColumnName = "id")
+    @JsonManagedReference
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "project_id")
     private Project project;
-    @Column(name="project_name")
-    private String projectName;
 
+    @JsonBackReference
     @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="task_id", referencedColumnName = "id")
     private Set<TaskAttachment> taskAttachments;
 
+    @JsonBackReference
     @OneToMany(fetch =FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="task_id", referencedColumnName = "id")
-    private Set<TaskComment> taskComments;
+    private List<TaskComment> taskComments;
+
 
 }

@@ -25,4 +25,5 @@ public class TaskAttachment {
     @NonNull
     @Lob
     private byte[] attachments;
+
 }

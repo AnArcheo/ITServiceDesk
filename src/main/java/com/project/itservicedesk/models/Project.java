@@ -1,5 +1,6 @@
 package com.project.itservicedesk.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@ToString(of = {"projectName", "company"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -24,16 +24,26 @@ public class Project {
     @Column(name = "project_name", nullable = false, unique = true)
     private String projectName;
 
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
 
+    @JsonBackReference
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "projects")
-    private Set<User> users = new HashSet<>();
+    private Set<User> users;
 
+    @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
-    private List<Task> projectTasks = new ArrayList<>();
+    private List<Task> projectTasks;
 
+    @JsonBackReference
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
-    private List<Bug> projectBugs = new ArrayList<>();
+    private List<Bug> projectBugs;
+
+
+    @Override
+    public String toString() {
+        return projectName;
+    }
 }
